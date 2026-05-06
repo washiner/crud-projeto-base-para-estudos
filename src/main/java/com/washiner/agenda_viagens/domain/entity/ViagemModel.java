@@ -38,4 +38,7 @@ public class ViagemModel {
     @Column(nullable = false)
     private StatusViagem status;
 
+    @Column(nullable = false)
+    private String cpf;
+
 }

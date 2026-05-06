@@ -1,5 +1,7 @@
 package com.washiner.agenda_viagens.controller;
 
+import com.washiner.agenda_viagens.domain.dto.ViagemRequest;
+import com.washiner.agenda_viagens.domain.dto.ViagemResponse;
 import com.washiner.agenda_viagens.domain.entity.ViagemModel;
 import com.washiner.agenda_viagens.service.ViagemService;
 import lombok.RequiredArgsConstructor;
@@ -19,25 +21,25 @@ public class ViagemController {
     //listar todos
 
     @GetMapping
-    public ResponseEntity<List<ViagemModel>> listar(){
+    public ResponseEntity<List<ViagemResponse>> listar(){
         return ResponseEntity.ok(viagemService.listarService());
     }
 
     //listar por id
     @GetMapping("/{id}")
-    public ResponseEntity<ViagemModel> buscarPorId(@PathVariable Long id){
+    public ResponseEntity<ViagemResponse> buscarPorId(@PathVariable Long id){
         return ResponseEntity.ok(viagemService.buscarPorID(id));
     }
 
-    //criar novo
+    //criar novo //agora com dto
     @PostMapping
-    public ResponseEntity<ViagemModel> criar(@RequestBody ViagemModel viagem){
+    public ResponseEntity<ViagemResponse> criar(@RequestBody ViagemRequest viagem){
         return ResponseEntity.status(HttpStatus.CREATED).body(viagemService.criar(viagem));
     }
 
     // atualizar
     @PutMapping("/{id}")
-    public ResponseEntity<ViagemModel> atualizar(@PathVariable Long id, @RequestBody ViagemModel viagem){
+    public ResponseEntity<ViagemResponse> atualizar(@PathVariable Long id, @RequestBody ViagemRequest viagem){
         return ResponseEntity.ok(viagemService.atualizar(id, viagem));
     }
 

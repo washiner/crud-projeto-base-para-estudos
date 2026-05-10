@@ -28,10 +28,10 @@ public class ViagemModel {
     @Column(nullable = false)
     private String pais;
 
-    @Column(nullable = false)
+    @Column(name = "data_partida", nullable = false)
     private LocalDate dataPartida;
 
-    @Column(nullable = false)
+    @Column(name = "data_retorno", nullable = false)
     private LocalDate dataRetorno;
 
     @Enumerated(EnumType.STRING)

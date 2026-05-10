@@ -4,6 +4,7 @@ import com.washiner.agenda_viagens.domain.dto.ViagemRequest;
 import com.washiner.agenda_viagens.domain.dto.ViagemResponse;
 import com.washiner.agenda_viagens.domain.entity.ViagemModel;
 import com.washiner.agenda_viagens.service.ViagemService;
+import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -33,13 +34,13 @@ public class ViagemController {
 
     //criar novo //agora com dto
     @PostMapping
-    public ResponseEntity<ViagemResponse> criar(@RequestBody ViagemRequest viagem){
+    public ResponseEntity<ViagemResponse> criar(@Valid @RequestBody ViagemRequest viagem){
         return ResponseEntity.status(HttpStatus.CREATED).body(viagemService.criar(viagem));
     }
 
     // atualizar
     @PutMapping("/{id}")
-    public ResponseEntity<ViagemResponse> atualizar(@PathVariable Long id, @RequestBody ViagemRequest viagem){
+    public ResponseEntity<ViagemResponse> atualizar(@Valid @PathVariable Long id, @RequestBody ViagemRequest viagem){
         return ResponseEntity.ok(viagemService.atualizar(id, viagem));
     }
 

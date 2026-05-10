@@ -4,6 +4,7 @@ import com.washiner.agenda_viagens.domain.dto.ViagemRequest;
 import com.washiner.agenda_viagens.domain.dto.ViagemResponse;
 import com.washiner.agenda_viagens.domain.entity.ViagemModel;
 import com.washiner.agenda_viagens.infra.exceptions.RecursoNaoEncontradoException;
+import com.washiner.agenda_viagens.mapper.ViagemMapper;
 import com.washiner.agenda_viagens.repository.ViagemRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
@@ -15,58 +16,29 @@ import java.util.List;
 public class ViagemService {
 
    private final ViagemRepository viagemRepository;
+   private final ViagemMapper viagemMapper;
 
    //listar viagens
 
     public List<ViagemResponse> listarService(){
         return viagemRepository.findAll()
                 .stream()
-                .map(viagemModel -> new ViagemResponse(
-                        viagemModel.getId(),
-                        viagemModel.getDestino(),
-                        viagemModel.getPais(),
-                        viagemModel.getDataPartida(),
-                        viagemModel.getDataRetorno(),
-                        viagemModel.getStatus()
-                )).toList();
+                .map(viagemMapper::toResponse).toList();
     }
 
     //buscar por id
     public ViagemResponse buscarPorID(Long id){
         ViagemModel viagem = viagemRepository.findById(id)
                 .orElseThrow(()-> new RecursoNaoEncontradoException("Viagem não encontrado"));
-        return new ViagemResponse(
-                viagem.getId(),
-                viagem.getDestino(),
-                viagem.getPais(),
-                viagem.getDataPartida(),
-                viagem.getDataRetorno(),
-                viagem.getStatus()
-        );
+        return viagemMapper.toResponse(viagem);
     }
 
     //criar novo
 
     public ViagemResponse criar(ViagemRequest request){
-        ViagemModel viagemBd = new ViagemModel();
-        viagemBd.setDestino(request.destino());
-        viagemBd.setPais(request.pais());
-        viagemBd.setDataPartida(request.dataPartida());
-        viagemBd.setDataRetorno(request.dataRetorno());
-        viagemBd.setStatus(request.status());
-        viagemBd.setCpf(request.cpf());
-
-        ViagemModel salvo = viagemRepository.save(viagemBd);
-
-
-        return new ViagemResponse(
-                salvo.getId(),
-                salvo.getDestino(),
-                salvo.getPais(),
-                salvo.getDataPartida(),
-                salvo.getDataRetorno(),
-                salvo.getStatus()
-        );
+        ViagemModel viagem = viagemMapper.toModel(request);
+        ViagemModel salvo = viagemRepository.save(viagem);
+        return viagemMapper.toResponse(salvo);
     }
 
     //atualizar
@@ -79,17 +51,8 @@ public class ViagemService {
         viagemBD.setDataRetorno(request.dataRetorno());
         viagemBD.setStatus(request.status());
 
-        ViagemModel salvo = viagemRepository.save(viagemBD);
-        return new ViagemResponse(
-          salvo.getId(),
-          salvo.getDestino(),
-          salvo.getPais(),
-          salvo.getDataPartida(),
-          salvo.getDataRetorno(),
-          salvo.getStatus()
-        );
-
-
+        ViagemModel atualizado = viagemRepository.save(viagemBD);
+        return viagemMapper.toResponse(atualizado);
     }
 
     public void deletar(Long id) {

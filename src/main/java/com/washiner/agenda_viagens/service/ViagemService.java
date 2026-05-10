@@ -3,6 +3,7 @@ package com.washiner.agenda_viagens.service;
 import com.washiner.agenda_viagens.domain.dto.ViagemRequest;
 import com.washiner.agenda_viagens.domain.dto.ViagemResponse;
 import com.washiner.agenda_viagens.domain.entity.ViagemModel;
+import com.washiner.agenda_viagens.infra.exceptions.RecursoNaoEncontradoException;
 import com.washiner.agenda_viagens.repository.ViagemRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
@@ -33,7 +34,7 @@ public class ViagemService {
     //buscar por id
     public ViagemResponse buscarPorID(Long id){
         ViagemModel viagem = viagemRepository.findById(id)
-                .orElseThrow(()-> new RuntimeException("Id não encontrado"));
+                .orElseThrow(()-> new RecursoNaoEncontradoException("Viagem não encontrado"));
         return new ViagemResponse(
                 viagem.getId(),
                 viagem.getDestino(),
@@ -71,7 +72,7 @@ public class ViagemService {
     //atualizar
     public ViagemResponse atualizar(Long id, ViagemRequest request){
         ViagemModel viagemBD = viagemRepository.findById(id)
-                .orElseThrow(()-> new RuntimeException("Id não encontrado"));
+                .orElseThrow(()-> new RecursoNaoEncontradoException("Viagem não encontrada"));
         viagemBD.setDestino(request.destino());
         viagemBD.setPais(request.pais());
         viagemBD.setDataPartida(request.dataPartida());
@@ -93,7 +94,7 @@ public class ViagemService {
 
     public void deletar(Long id) {
         ViagemModel viagem = viagemRepository.findById(id)
-                .orElseThrow(()-> new RuntimeException("Id não encontrado"));
+                .orElseThrow(()-> new RecursoNaoEncontradoException("Viagem nao encontrada"));
         viagemRepository.delete(viagem);
     }
 }
